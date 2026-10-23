@@ -170,8 +170,8 @@ async function loadMyProjects() {
     const status = p.status || 'Yangi';
     return '<div class="project"><div class="project-head"><b>' + esc(title) +
       '</b><span class="pill ' + statusClass(status) + '">' + esc(status) +
-      '</span></div><p>' + esc(p.direction || p.category || '') + ' · ' +
-      niceDate(p.created_at) + '</p><p>' + esc(p.description || p.problem_solution || '') +
+      '</span></div><p>' + esc(p.direction || p.category || '') + (p.project_stage ? ' · ' + esc(p.project_stage) : '') + ' · ' +
+      niceDate(p.created_at) + '</p><p>' + esc(p.project_description || p.description || p.problem_solution || '') +
       '</p>' + (p.admin_note ? '<p><b>Admin izohi:</b> ' + esc(p.admin_note) + '</p>' : '') +
       (p.file_url ? '<p><a href="' + esc(p.file_url) + '" target="_blank" rel="noopener">📎 Biriktirilgan faylni ochish</a></p>' : '') +
       '</div>';
@@ -261,23 +261,35 @@ $('projectForm').onsubmit = async e => {
     }
   }
 
+  // Jadvaldagi mavjud ustun nomlariga moslashtirilgan ma'lumotlar.
+  const projectDescription = $('description').value.trim();
+  const impactText = $('impact').value.trim();
+  const fullDescription = impactText
+    ? projectDescription + '\n\nKutilayotgan natija va rivojlanish rejasi: ' + impactText
+    : projectDescription;
+  let publicFileUrl = null;
+  if (filePath) {
+    const { data: urlData } = supabaseClient.storage.from('project-files').getPublicUrl(filePath);
+    publicFileUrl = urlData?.publicUrl || null;
+  }
+
+  const studentDirection = $('studentDirection').value.trim();
+  const projectDirection = $('projectDirection').value.trim();
   const row = {
     user_id: currentUser.id,
     startup_name: $('pTitle').value.trim(),
     university: $('projectUniversity').value.trim(),
     faculty: $('faculty').value.trim(),
-    direction: $('projectDirection').value.trim(),
+    direction: studentDirection ? studentDirection + ' — ' + projectDirection : projectDirection,
     category: $('category').value,
-    stage: $('stage').value,
+    project_stage: $('stage').value,
     study_stage: $('studyStage').value,
-    student_direction: $('studentDirection').value.trim(),
     phone: $('projectPhone').value.trim(),
-    team: $('team').value.trim(),
-    description: $('description').value.trim(),
-    impact: $('impact').value.trim(),
+    team_members: $('team').value.trim(),
+    project_description: fullDescription,
     status: 'Yangi',
     admin_note: '',
-    file_path: filePath
+    file_url: publicFileUrl
   };
   const { error } = await supabaseClient.from('startup_applications').insert(row);
   if (error) {
@@ -315,7 +327,9 @@ async function loadModalProjects() {
   target.innerHTML = data && data.length ? data.map(p =>
     '<div class="project"><div class="project-head"><b>' + esc(p.startup_name || 'Nomsiz loyiha') +
     '</b><span class="pill ' + statusClass(p.status || 'Yangi') + '">' + esc(p.status || 'Yangi') +
-    '</span></div><p>' + esc(p.direction || '') + '</p>' +
+    '</span></div><p>' + esc(p.direction || '') + (p.project_stage ? ' · ' + esc(p.project_stage) : '') + '</p>' +
+    (p.project_description ? '<p>' + esc(p.project_description) + '</p>' : '') +
+    (p.file_url ? '<p><a href="' + esc(p.file_url) + '" target="_blank" rel="noopener">📎 Biriktirilgan faylni ochish</a></p>' : '') +
     (p.admin_note ? '<p><b>Admin izohi:</b> ' + esc(p.admin_note) + '</p>' : '') + '</div>'
   ).join('') : '<p>Hozircha loyiha yuborilmagan.</p>';
 }
