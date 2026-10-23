@@ -25,6 +25,12 @@ body.account-open{overflow:hidden}
 .account-modal .account-tile h3{margin-top:0}
 .account-modal .account-close{border:0;border-radius:10px;background:var(--navy);color:white;padding:11px 15px;font-weight:800;cursor:pointer}
 @media(max-width:650px){.account-modal{padding:12px}.account-modal .account-shell{padding:18px}.account-modal .account-grid{grid-template-columns:1fr}.account-modal .account-top{align-items:flex-start;flex-direction:column}}
+.admin-toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+.admin-toolbar input,.admin-toolbar select{border:1px solid #d5e0eb;border-radius:9px;padding:10px;font:inherit;background:white}
+.admin-project{border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0;background:#fff}
+.admin-project-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:12px}
+.admin-project-grid textarea,.admin-project-grid select{width:100%;border:1px solid #d5e0eb;border-radius:9px;padding:10px;font:inherit}
+@media(max-width:650px){.admin-project-grid{grid-template-columns:1fr}}
 </style></head>
 <body>
 <div class="top">ANDDU START UP HUB · G‘OYADAN LOYIHAGACHA · INNOVATSIYA VA TADBIRKORLIK</div>
@@ -339,15 +345,132 @@ function closeAccountWindow() {
   document.body.classList.remove('account-open');
 }
 
-/* Admin route is deliberately not given a hard-coded password.
-   Production admin management must be protected with Supabase Auth + server-side role/RLS. */
-function renderAdminRoute() {
-  const isAdminRoute = location.pathname.replace(/\/+$/, '').endsWith('/admin') || location.hash === '#admin-login';
-  if (!isAdminRoute) return;
+/* Admin panel: Supabase Auth + public.is_startup_admin() + RLS policies. */
+const ADMIN_STATUSES = ['Yangi', 'Ko‘rib chiqilmoqda', 'Keyingi bosqichga o‘tdi', 'Qabul qilindi', 'Rad etildi'];
+
+function closeAdminGate() {
+  const el = $('privateAdminGate');
+  if (el) el.remove();
+  document.body.classList.remove('account-open');
+}
+
+function adminShell() {
+  return '<div class="account-shell" style="max-width:1100px">' +
+    '<div class="account-top"><div><div class="kicker">ANDDU START UP HUB</div><h2 class="title">Administrator paneli</h2>' +
+    '<p class="sub">Kelgan arizalarni ko‘ring, holatini yangilang va talabaga izoh qoldiring.</p></div>' +
+    '<div class="actions"><button class="btn pale" id="adminRefresh">Yangilash ↻</button>' +
+    '<button class="btn dark" id="adminSignOut">Chiqish</button><button class="account-close" onclick="closeAdminGate()">Yopish ✕</button></div></div>' +
+    '<div id="adminMsg"></div><div id="adminStats" class="stats" style="margin:12px 0;top:0"></div>' +
+    '<div class="admin-toolbar"><input id="adminSearch" type="search" placeholder="Loyiha, talaba yoki universitet bo‘yicha qidirish">' +
+    '<select id="adminFilter"><option value="">Barcha holatlar</option>' +
+    ADMIN_STATUSES.map(s => '<option value="' + esc(s) + '">' + esc(s) + '</option>').join('') +
+    '</select></div><div id="adminProjects"><div class="note">Arizalar yuklanmoqda...</div></div></div>';
+}
+
+async function checkAdminRole() {
+  const { data, error } = await supabaseClient.rpc('is_startup_admin');
+  if (error) return { ok: false, message: 'Admin roli tekshirilmadi: ' + error.message + '. Supabase’da public.is_startup_admin() funksiyasi va admin_users yozuvini tekshirish kerak.' };
+  if (data !== true) return { ok: false, message: 'Bu hisobga administrator huquqi berilmagan. Supabase private.admin_users jadvalida shu hisobning UID raqami borligini tekshiring.' };
+  return { ok: true };
+}
+
+async function loadAdminApplications() {
+  const target = $('adminProjects');
+  if (!target) return;
+  target.innerHTML = '<div class="note">Arizalar yuklanmoqda...</div>';
+  const { data, error } = await supabaseClient.from('startup_applications')
+    .select('*').order('created_at', { ascending: false });
+  if (error) {
+    target.innerHTML = '<div class="msg err">Arizalarni yuklab bo‘lmadi: ' + esc(error.message) + '</div>';
+    return;
+  }
+  const all = data || [];
+  const stats = $('adminStats');
+  if (stats) stats.innerHTML =
+    '<div class="stat"><div class="ico">📨</div><div><b>' + all.length + '</b><small>Jami arizalar</small></div></div>' +
+    '<div class="stat"><div class="ico">🕒</div><div><b>' + all.filter(p => ['Yangi','Ko‘rib chiqilmoqda'].includes(p.status || 'Yangi')).length + '</b><small>Ko‘rib chiqilmoqda</small></div></div>' +
+    '<div class="stat"><div class="ico">✅</div><div><b>' + all.filter(p => ['Keyingi bosqichga o‘tdi','Qabul qilindi'].includes(p.status)).length + '</b><small>Ijobiy qaror</small></div></div>';
+
+  const search = ($('adminSearch')?.value || '').trim().toLowerCase();
+  const filter = $('adminFilter')?.value || '';
+  const rows = all.filter(p => {
+    const haystack = [p.startup_name,p.university,p.faculty,p.direction,p.phone,p.team_members,p.project_description].join(' ').toLowerCase();
+    return (!search || haystack.includes(search)) && (!filter || (p.status || 'Yangi') === filter);
+  });
+  if (!rows.length) {
+    target.innerHTML = '<div class="note">' + (all.length ? 'Tanlangan qidiruv yoki holat bo‘yicha ariza topilmadi.' : 'Hozircha ariza mavjud emas.') + '</div>';
+    return;
+  }
+  target.innerHTML = rows.map(p => {
+    const status = p.status || 'Yangi';
+    return '<article class="admin-project" data-id="' + esc(p.id) + '">' +
+      '<div class="project-head"><div><h3 style="margin:0 0 5px">' + esc(p.startup_name || 'Nomsiz loyiha') + '</h3>' +
+      '<span class="pill ' + statusClass(status) + '">' + esc(status) + '</span> <span class="pill">' + esc(p.category || p.direction || 'Yo‘nalish ko‘rsatilmagan') + '</span></div>' +
+      '<small>' + esc(niceDate(p.created_at)) + '</small></div>' +
+      '<p><b>Talaba yo‘nalishi:</b> ' + esc(p.direction || '—') + ' · <b>Bosqich:</b> ' + esc(p.project_stage || '—') + '</p>' +
+      '<p><b>OTM:</b> ' + esc(p.university || '—') + ' · <b>Fakultet:</b> ' + esc(p.faculty || '—') + '</p>' +
+      '<p><b>Telefon:</b> ' + esc(p.phone || '—') + ' · <b>Jamoa:</b> ' + esc(p.team_members || '—') + '</p>' +
+      '<p><b>Loyiha tavsifi:</b><br>' + esc(p.project_description || '—').replace(/\n/g,'<br>') + '</p>' +
+      (p.file_url ? '<p><a href="' + esc(p.file_url) + '" target="_blank" rel="noopener">📎 Biriktirilgan faylni ochish</a></p>' : '<p><small>Fayl biriktirilmagan.</small></p>') +
+      '<div class="admin-project-grid"><div><label><b>Ariza holati</b></label><select class="admin-status">' +
+      ADMIN_STATUSES.map(s => '<option value="' + esc(s) + '"' + (s === status ? ' selected' : '') + '>' + esc(s) + '</option>').join('') +
+      '</select></div><div><label><b>Talabaga izoh</b></label><textarea class="admin-note" rows="2" maxlength="1500" placeholder="Izoh yoki keyingi qadamlar">' + esc(p.admin_note || '') + '</textarea></div></div>' +
+      '<div class="project-actions"><button type="button" class="btn blue admin-save">Saqlash</button></div><div class="admin-row-msg"></div></article>';
+  }).join('');
+
+  target.querySelectorAll('.admin-save').forEach(button => {
+    button.addEventListener('click', async () => {
+      const card = button.closest('.admin-project');
+      const rowMsg = card.querySelector('.admin-row-msg');
+      button.disabled = true;
+      button.textContent = 'Saqlanmoqda...';
+      const id = card.dataset.id;
+      const status = card.querySelector('.admin-status').value;
+      const admin_note = card.querySelector('.admin-note').value.trim();
+      const { error: updateError } = await supabaseClient.from('startup_applications')
+        .update({ status, admin_note }).eq('id', id);
+      button.disabled = false;
+      button.textContent = 'Saqlash';
+      if (updateError) {
+        rowMsg.innerHTML = '<div class="msg err">Saqlanmadi: ' + esc(updateError.message) + '</div>';
+        return;
+      }
+      rowMsg.innerHTML = '<div class="msg">Holat va izoh saqlandi.</div>';
+      await loadAdminApplications();
+    });
+  });
+}
+
+async function openAdminDashboard() {
+  closeAdminGate();
   const modal = document.createElement('div');
   modal.id = 'privateAdminGate';
   modal.className = 'account-modal';
-  modal.innerHTML = '<div class="account-shell" style="max-width:520px"><div class="account-top"><div><div class="kicker">MAXSUS KIRISH</div><h2 class="title">Administrator</h2><p class="sub">Supabase administrator hisobi orqali kiring.</p></div><button class="account-close" onclick="closeAdminGate()">Yopish ✕</button></div><form id="privateAdminForm"><div class="field"><label>Admin email</label><input id="privateAdminEmail" type="email" required autocomplete="username"></div><div class="field"><label>Parol</label><input id="privateAdminPassword" type="password" required autocomplete="current-password"></div><button class="btn dark" type="submit">Kirish →</button><div id="privateAdminMsg"></div></form><p class="note">Admin ma’lumotlari kod ichida saqlanmaydi. Admin huquqlarini Supabase RLS orqali alohida sozlash zarur.</p><a class="btn pale" href="./">Bosh sahifaga qaytish</a></div>';
+  modal.innerHTML = adminShell();
+  document.body.appendChild(modal);
+  document.body.classList.add('account-open');
+  $('adminRefresh').onclick = loadAdminApplications;
+  $('adminSearch').addEventListener('input', loadAdminApplications);
+  $('adminFilter').addEventListener('change', loadAdminApplications);
+  $('adminSignOut').onclick = async () => {
+    await supabaseClient.auth.signOut();
+    currentUser = null;
+    closeAdminGate();
+    msg('authMsg', 'Administrator hisobidan chiqdingiz.');
+  };
+  await loadAdminApplications();
+}
+
+function renderAdminRoute() {
+  const path = location.pathname.replace(/\/+$/, '');
+  const isAdminRoute = path.endsWith('/admin') || location.hash === '#admin-login';
+  if (!isAdminRoute || $('privateAdminGate')) return;
+  const modal = document.createElement('div');
+  modal.id = 'privateAdminGate';
+  modal.className = 'account-modal';
+  modal.innerHTML = '<div class="account-shell" style="max-width:520px"><div class="account-top"><div><div class="kicker">MAXSUS KIRISH</div><h2 class="title">Administrator</h2><p class="sub">Admin hisobingizning Supabase Auth email va paroli bilan kiring.</p></div><button class="account-close" onclick="closeAdminGate()">Yopish ✕</button></div>' +
+    '<form id="privateAdminForm"><div class="field"><label>Admin email</label><input id="privateAdminEmail" type="email" required autocomplete="username"></div><div class="field"><label>Parol</label><input id="privateAdminPassword" type="password" required autocomplete="current-password"></div><button class="btn dark" type="submit">Kirish →</button><div id="privateAdminMsg"></div></form>' +
+    '<p class="note">Admin huquqi faqat Supabase’da alohida ruxsat berilgan hisobga ochiladi.</p><a class="btn pale" href="./">Bosh sahifaga qaytish</a></div>';
   document.body.appendChild(modal);
   document.body.classList.add('account-open');
   $('privateAdminForm').onsubmit = async e => {
@@ -358,15 +481,13 @@ function renderAdminRoute() {
     });
     if (error) { msg('privateAdminMsg', error.message, true); return; }
     currentUser = data.user;
-    closeAdminGate();
-    msg('authMsg', 'Hisobga kirildi. Admin ma’lumotlarini ko‘rsatish uchun serverda admin roli va RLS sozlanishi kerak.');
-    await render();
+    const role = await checkAdminRole();
+    if (!role.ok) {
+      msg('privateAdminMsg', role.message, true);
+      return;
+    }
+    await openAdminDashboard();
   };
-}
-function closeAdminGate() {
-  const el = $('privateAdminGate');
-  if (el) el.remove();
-  document.body.classList.remove('account-open');
 }
 
 $('adminSearch').addEventListener('input', () => {});
