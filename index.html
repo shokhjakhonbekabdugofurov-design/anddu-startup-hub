@@ -56,12 +56,7 @@ body.account-open{overflow:hidden}
 <article class="panel person"><div class="avatar">AS</div><div><div class="role">Startup platformasi va murojaatlar bo‘yicha aloqa</div><h3>Abdugofurov Shoxjaxon Muhammadqobul o‘g‘li</h3><p>AndDU Start Up Hub platformasi bo‘yicha savollar va texnik murojaatlar.</p><div class="links"><a href="tel:+998934171378">☎ +998 93 417 13 78</a><a href="mailto:shokhjakhonbekabdugofurov@gmail.com">✉ shokhjakhonbekabdugofurov@gmail.com</a></div></div></article>
 </div></div></section>
 
-<section id="admin" class="hidden" aria-hidden="true">
-  <div id="adminDashboard" class="hidden"></div>
-  <div id="adminWelcome"></div><div id="adminInfo"></div><button id="adminLogout" class="hidden"></button>
-  <div id="adminStats"></div><input id="adminSearch"><select id="adminFilter"><option value="">Barcha holatlar</option><option>Yangi</option><option>Ko‘rib chiqilmoqda</option><option>Keyingi bosqichga o‘tdi</option><option>Qabul qilindi</option><option>Rad etildi</option></select>
-  <div id="adminProjects"></div><div id="adminUsers"></div><form id="adminLogin"></form><div id="adminMsg"></div>
-</section>
+<!-- Eski yashirin admin elementlari olib tashlandi: ular modal ichidagi ID lar bilan to‘qnashardi. -->
 
 <footer class="footer">AndDU Start Up Hub · Andijon davlat universiteti · <a href="https://adu.uz" style="color:#fff">adu.uz</a></footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -490,8 +485,6 @@ function renderAdminRoute() {
   };
 }
 
-$('adminSearch').addEventListener('input', () => {});
-$('adminFilter').addEventListener('change', () => {});
 supabaseClient.auth.onAuthStateChange((_event, session) => {
   currentUser = session?.user || null;
   setTimeout(() => render(), 0);
