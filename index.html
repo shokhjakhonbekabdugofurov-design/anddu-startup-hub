@@ -230,6 +230,16 @@ $('login').onsubmit = async e => {
   if (error) { msg('authMsg', error.message, true); return; }
   currentUser = data.user;
   $('login').reset();
+
+  // Oddiy kirish formasidan admin ham kirsa, admin paneliga yo‘naltirish.
+  const role = await checkAdminRole();
+  if (role.ok) {
+    msg('authMsg', 'Administrator sifatida tizimga kirdingiz.');
+    await openAdminDashboard();
+    return;
+  }
+
+  // Admin huquqi bo‘lmagan foydalanuvchi odatdagi kabinetga kiradi.
   msg('authMsg', 'Tizimga muvaffaqiyatli kirdingiz.');
   await render();
   openAccountWindow();
