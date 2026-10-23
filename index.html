@@ -37,7 +37,7 @@ body.account-open{overflow:hidden}
 <form id="register"><div class="field"><label>F.I.SH *</label><input id="name" required maxlength="150" autocomplete="name" placeholder="Familiya Ism Sharif"></div><div class="field"><label>Telefon raqam *</label><input id="phone" type="tel" required maxlength="30" autocomplete="tel" placeholder="+998 90 123 45 67"></div><div class="field"><label>Gmail *</label><input id="email" type="email" required maxlength="150" autocomplete="email" placeholder="name@gmail.com"></div><div class="field"><label>Oliy ta’lim muassasasi *</label><input id="university" required maxlength="180" placeholder="Universitet nomi"></div><div class="field"><label>Parol *</label><input id="password" type="password" minlength="8" required autocomplete="new-password" placeholder="Kamida 8 belgi"></div><div class="field"><label>Parol (takroriy) *</label><input id="passwordConfirm" type="password" minlength="8" required autocomplete="new-password" placeholder="Parolni qayta kiriting"></div><button class="btn blue" type="submit">Hisob yaratish →</button></form>
 <form id="login" class="hidden"><div class="field"><label>Email *</label><input id="loginEmail" type="email" required></div><div class="field"><label>Parol *</label><input id="loginPassword" type="password" required></div><button class="btn blue" type="submit">Kirish →</button></form><div id="authMsg"></div></div>
 <div class="panel"><h3 id="profileTitle">Shaxsiy kabinet</h3><p id="profileDesc">Ro‘yxatdan o‘ting yoki hisobingizga kiring. Kirganingizdan so‘ng alohida shaxsiy kabinet ochiladi.</p><div id="profile" class="note">Hozircha tizimga kirmagansiz.</div><div class="actions"><button id="logout" class="btn pale hidden" onclick="logout()">Chiqish</button><a id="myProjectsLink" class="btn pale hidden" href="#submit">Loyiha topshirish</a></div></div></div>
-<div class="note"><b>Muhim:</b> bu yuklab olinadigan HTML faylning namoyish prototipi. Ma’lumotlar faqat shu brauzerda saqlanadi. Haqiqiy, barcha foydalanuvchilar uchun umumiy va xavfsiz tizim bo‘lishi uchun server/backend, ma’lumotlar bazasi va fayl ombori (masalan, Supabase) ulanishi shart. Bu demo faylga maxfiy yoki haqiqiy shaxsiy ma’lumot kiritmang.</div></div></section>
+<div class="note"><b>Muhim:</b> Sayt Supabase Auth, startup_applications jadvali va project-files fayl omboriga ulanadi. Ishlashi uchun jadval ustunlari hamda RLS siyosatlari quyidagi kod kutayotgan maydonlarga mos bo‘lishi kerak. Publishable key brauzerda ishlatiladi; secret/service_role kalitini hech qachon bu faylga qo‘ymang.</div></div></section>
 <section id="submit"><div class="wrap"><div class="kicker">Nomzod arizasi</div><h2 class="title">Start Up loyihani yuborish</h2><p class="sub">Start Up loyihangiz haqidagi ma’lumotlarni kiriting va prototip yoki taqdimot faylini yuklang. Arizangiz ko‘rib chiqish uchun yuboriladi.</p><div class="twocol"><div class="panel"><form id="projectForm"><div class="field"><label>Startap nomi *</label><input id="pTitle" required maxlength="100" placeholder="Loyiha nomi"></div><div class="rowfields"><div class="field"><label>Yo‘nalish *</label><select id="category" required><option value="">Tanlang</option><option>IT va raqamli texnologiyalar</option><option>Sun’iy intellekt</option><option>Ta’lim texnologiyalari</option><option>Qishloq xo‘jaligi</option><option>Ekologiya va yashil texnologiyalar</option><option>Tibbiyot va biotexnologiya</option><option>Ijtimoiy innovatsiya</option><option>Energetika</option><option>Ishlab chiqarish</option><option>Turizm</option><option>Boshqa</option></select></div><div class="field"><label>Loyiha bosqichi *</label><select id="stage" required><option value="">Tanlang</option><option>G‘oya</option><option>Prototip</option><option>Sinov</option><option>Faoliyat yuritmoqda</option></select></div></div><div class="field"><label>Oliy ta’lim muassasasi *</label><input id="projectUniversity" required maxlength="180" placeholder="Oliy ta’lim muassasasi nomi"></div><div class="rowfields"><div class="field"><label>Fakultet *</label><input id="faculty" required maxlength="180" placeholder="Fakultet nomi"></div><div class="field"><label>Ta’lim yo‘nalishi *</label><input id="studentDirection" required maxlength="180" placeholder="Mutaxassislik yoki ta’lim yo‘nalishi"></div></div><div class="rowfields"><div class="field"><label>O‘qish bosqichi/kursi *</label><select id="studyStage" required><option value="">Tanlang</option><option>1-kurs</option><option>2-kurs</option><option>3-kurs</option><option>4-kurs</option><option>Magistratura 1-kurs</option><option>Magistratura 2-kurs</option><option>Doktorantura</option><option>Boshqa</option></select></div><div class="field"><label>Faol telefon raqami *</label><input id="projectPhone" type="tel" required maxlength="30" placeholder="+998 90 123 45 67" autocomplete="tel"></div></div><div class="field"><label>Loyiha yo‘nalishini kiriting *</label><input id="projectDirection" required maxlength="150" placeholder="Masalan: sun’iy intellekt, ekologiya, ta’lim texnologiyalari"></div><div class="field"><label>Jamoa a’zolari</label><input id="team" maxlength="300" placeholder="Ismlar yoki jamoa nomi"></div><div class="field"><label>Muammo va taklif etilayotgan yechim *</label><textarea id="description" required maxlength="3000" placeholder="Loyiha qanday muammoni hal qiladi va qanday ishlaydi?"></textarea></div><div class="field"><label>Kutilayotgan natija va rivojlanish rejasi</label><textarea id="impact" maxlength="1500" placeholder="Loyihaning foydasi, maqsadli auditoriya va reja"></textarea></div><div class="field"><label>Loyiha (prototip) fayli (PDF, DOC/DOCX, PPT/PPTX, XLS/XLSX, ZIP) — 10 MB gacha</label><input id="attachment" type="file" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.zip"></div><button class="btn gold" type="submit">Arizani yuborish →</button><div id="projectMsg"></div></form></div>
 <div class="panel"><h3>Mening loyihalarim</h3><p>Faqat tizimga kirgan nomzodning arizalari ko‘rsatiladi.</p><div id="projectList"><div class="note">Avval tizimga kiring.</div></div></div></div></div></section>
 
@@ -58,85 +58,313 @@ body.account-open{overflow:hidden}
 </section>
 
 <footer class="footer">AndDU Start Up Hub · Andijon davlat universiteti · <a href="https://adu.uz" style="color:#fff">adu.uz</a></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-const U='anduHubUsersV2',P='anduHubProjectsV2',C='anduHubCurrentV2',A='anduHubAdminV2';
-const ADMIN_EMAIL='admin@anddu.uz',ADMIN_PASSWORD='AndDU-demo-2026';
-const read=k=>{try{return JSON.parse(localStorage.getItem(k)||'[]')}catch(e){return []}},save=(k,v)=>localStorage.setItem(k,JSON.stringify(v)),esc=s=>String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-const $=id=>document.getElementById(id);function current(){return read(U).find(x=>x.email===localStorage.getItem(C))}
-function msg(id,t,err=false){$(id).innerHTML='<div class="msg '+(err?'err':'')+'">'+esc(t)+'</div>'}
-function mode(m){$('register').classList.toggle('hidden',m!=='reg');$('login').classList.toggle('hidden',m!=='login');$('regTab').className='btn '+(m==='reg'?'blue':'pale');$('loginTab').className='btn '+(m==='login'?'blue':'pale');$('authMsg').innerHTML=''}
-$('register').onsubmit=e=>{e.preventDefault();let users=read(U),email=$('email').value.trim().toLowerCase(),password=$('password').value,passwordConfirm=$('passwordConfirm').value;
-if(!email.endsWith('@gmail.com')){msg('authMsg','Iltimos, Gmail manzilidan foydalaning (@gmail.com).',true);return}
-if(password.length<8){msg('authMsg','Parol kamida 8 belgidan iborat bo‘lishi kerak.',true);return}
-if(password!==passwordConfirm){msg('authMsg','Parollar bir-biriga mos kelmadi.',true);return}
-if(users.some(u=>u.email===email)){msg('authMsg','Bu Gmail avval ro‘yxatdan o‘tgan. Kirish bo‘limidan foydalaning.',true);return}
-users.push({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),name:$('name').value.trim(),university:$('university').value.trim(),phone:$('phone').value.trim(),email,password,created:new Date().toISOString()});save(U,users);localStorage.setItem(C,email);$('register').reset();msg('authMsg','Hisob yaratildi. Shaxsiy kabinetingiz ochildi.');render();openAccountWindow()};
-$('login').onsubmit=e=>{e.preventDefault();let email=$('loginEmail').value.trim().toLowerCase(),password=$('loginPassword').value;
-let u=read(U).find(x=>x.email===email&&x.password===password);if(!u){msg('authMsg','Gmail yoki parol noto‘g‘ri.',true);return}localStorage.setItem(C,email);$('login').reset();msg('authMsg','Tizimga muvaffaqiyatli kirdingiz.');render();openAccountWindow()};
-function logout(){localStorage.removeItem(C);render()}
-function adminLogout(){sessionStorage.removeItem(A);renderAdmin();render()}
-$('adminLogin').onsubmit=e=>{e.preventDefault();if($('adminEmail').value.trim().toLowerCase()!==ADMIN_EMAIL||$('adminPassword').value!==ADMIN_PASSWORD){msg('adminMsg','Admin email yoki parol noto‘g‘ri.',true);return}sessionStorage.setItem(A,'true');$('adminLogin').reset();msg('adminMsg','Admin paneli ochildi.');renderAdmin();render();openAdminWindow()};
-$('projectForm').onsubmit=async e=>{e.preventDefault();let u=current();if(!u){msg('projectMsg','Ariza yuborish uchun avval nomzod sifatida tizimga kiring.',true);location.hash='account';return}
-let file=$('attachment').files[0],attachment=null;if(file){if(file.size>10*1024*1024){msg('projectMsg','Fayl 10 MB dan katta. Iltimos, 10 MB gacha bo‘lgan fayl yuklang.',true);return}const allowed=['pdf','doc','docx','ppt','pptx','xls','xlsx','zip'];let ext=file.name.split('.').pop().toLowerCase();if(!allowed.includes(ext)){msg('projectMsg','Ushbu fayl turi qo‘llab-quvvatlanmaydi.',true);return}attachment={name:file.name,type:file.type||'application/octet-stream',size:file.size,data:await toDataURL(file)}}
-let ps=read(P);ps.push({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),title:$('pTitle').value.trim(),category:$('category').value,direction:$('projectDirection').value.trim(),university:$('projectUniversity').value.trim(),faculty:$('faculty').value.trim(),studentDirection:$('studentDirection').value.trim(),studyStage:$('studyStage').value,phone:$('projectPhone').value.trim(),stage:$('stage').value,team:$('team').value.trim(),description:$('description').value.trim(),impact:$('impact').value.trim(),owner:u.name,email:u.email,date:new Date().toISOString(),status:'Yangi',adminNote:'',attachment});try{save(P,ps)}catch(err){msg('projectMsg','Brauzer xotirasi to‘ldi. Faylni olib tashlab qayta yuboring.',true);return}$('projectForm').reset();msg('projectMsg','Arizangiz saqlandi. Admin ko‘rib chiqishi uchun yuborildi.');render();renderAdmin()};
-function toDataURL(file){return new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file)})}
-function downloadAttachment(id){let p=read(P).find(x=>x.id===id);if(!p||!p.attachment)return;let a=document.createElement('a');a.href=p.attachment.data;a.download=p.attachment.name;document.body.appendChild(a);a.click();a.remove()}
-function statusClass(s){if(s==='Qabul qilindi'||s==='Keyingi bosqichga o‘tdi')return 'approved';if(s==='Rad etildi')return 'rejected';if(s==='Ko‘rib chiqilmoqda')return 'review';return 'status'}
-function render(){let users=read(U),ps=read(P),u=current();$('countProjects').textContent=ps.length;$('countUsers').textContent=users.length;$('countReview').textContent=ps.filter(p=>p.status==='Yangi'||p.status==='Ko‘rib chiqilmoqda').length;
-if(u){$('profileTitle').textContent='Xush kelibsiz, '+u.name;$('profileDesc').textContent='Nomzod kabineti';$('profile').innerHTML='<b>'+esc(u.name)+'</b><p>'+esc(u.email)+'<br>'+esc(u.phone)+'<br>'+esc(u.university||'')+'</p><span class="pill">'+ps.filter(p=>p.email===u.email).length+' ta loyiha</span>';$('logout').classList.remove('hidden');$('myProjectsLink').classList.remove('hidden')}else{$('profileTitle').textContent='Shaxsiy kabinet';$('profileDesc').textContent='Tizimga kirganingizdan so‘ng hisobingiz va loyihalaringiz ko‘rinadi.';$('profile').textContent='Hozircha tizimga kirmagansiz.';$('logout').classList.add('hidden');$('myProjectsLink').classList.add('hidden')}
-let mine=u?ps.filter(p=>p.email===u.email).slice().reverse():[];$('projectList').innerHTML=mine.length?mine.map(p=>'<div class="project"><div class="project-head"><b>'+esc(p.title)+'</b><span class="pill '+statusClass(p.status)+'">'+esc(p.status)+'</span></div><p>'+esc(p.category)+' · '+esc(p.direction||'')+' · '+esc(p.stage)+' · '+new Date(p.date).toLocaleDateString('uz-UZ')+'</p><p>'+esc(p.description)+'</p>'+(p.adminNote?'<p><b>Admin izohi:</b> '+esc(p.adminNote)+'</p>':'')+(p.attachment?'<p>📎 '+esc(p.attachment.name)+'</p>':'')+'</div>').join(''):'<div class="note">'+(u?'Siz hali loyiha yubormagansiz.':'Arizalaringizni ko‘rish uchun tizimga kiring.')+'</div>';renderAdmin()}
-function renderAdmin(){let on=sessionStorage.getItem(A)==='true';$('adminDashboard').classList.toggle('hidden',!on);$('adminLogout').classList.toggle('hidden',!on);$('adminWelcome').textContent=on?'Administrator kabineti':'Admin holati';$('adminInfo').textContent=on?'Administrator sifatida tizimga kirgansiz. Barcha arizalar va nomzodlar sizga ko‘rinadi.':'Administrator tizimga kirmagan.';if(!on)return;
-let ps=read(P),users=read(U);$('adminStats').innerHTML='<b>'+ps.length+'</b> loyiha · <b>'+users.length+'</b> nomzod · <b>'+ps.filter(p=>p.status==='Yangi'||p.status==='Ko‘rib chiqilmoqda').length+'</b> ko‘rib chiqilishi kerak';let q=($('adminSearch').value||'').toLowerCase(),f=$('adminFilter').value;let filtered=ps.slice().reverse().filter(p=>(!f||p.status===f)&&[p.title,p.owner,p.email,p.category,p.description].join(' ').toLowerCase().includes(q));
-$('adminProjects').innerHTML=filtered.length?filtered.map(p=>'<div class="project"><div class="project-head"><div><b>'+esc(p.title)+'</b><p>Nomzod: '+esc(p.owner)+' · '+esc(p.email)+' · '+new Date(p.date).toLocaleString('uz-UZ')+'</p></div><span class="pill '+statusClass(p.status)+'">'+esc(p.status)+'</span></div><p><b>Yo‘nalish:</b> '+esc(p.category)+' · <b>Bosqich:</b> '+esc(p.stage)+'</p><p><b>Jamoa:</b> '+esc(p.team||'Ko‘rsatilmagan')+'</p><p><b>Muammo va yechim:</b> '+esc(p.description)+'</p><p><b>Kutilayotgan natija:</b> '+esc(p.impact||'Ko‘rsatilmagan')+'</p>'+(p.attachment?'<p>📎 '+esc(p.attachment.name)+' ('+Math.ceil(p.attachment.size/1024)+' KB)</p><button class="btn pale" onclick="downloadAttachment(\''+p.id+'\')">Faylni yuklab olish</button>':'<p>Ilova fayli biriktirilmagan.</p>')+'<div class="rowfields"><div class="field"><label>Ariza holati</label><select id="st-'+p.id+'"><option '+(p.status==='Yangi'?'selected':'')+'>Yangi</option><option '+(p.status==='Ko‘rib chiqilmoqda'?'selected':'')+'>Ko‘rib chiqilmoqda</option><option '+(p.status==='Keyingi bosqichga o‘tdi'?'selected':'')+'>Keyingi bosqichga o‘tdi</option><option '+(p.status==='Qabul qilindi'?'selected':'')+'>Qabul qilindi</option><option '+(p.status==='Rad etildi'?'selected':'')+'>Rad etildi</option></select></div><div class="field"><label>Admin izohi (nomzod ko‘radi)</label><input id="note-'+p.id+'" maxlength="500" value="'+esc(p.adminNote||'')+'" placeholder="Izoh yoki keyingi qadam"></div></div><div class="project-actions"><button class="btn blue" onclick="updateProject(\''+p.id+'\')">Saqlash</button><button class="btn danger" onclick="deleteProject(\''+p.id+'\')">Arizani o‘chirish</button></div></div>').join(''):'<div class="note">Bu filtr bo‘yicha ariza topilmadi.</div>';
-$('adminUsers').innerHTML=users.length?users.map(u=>'<div class="project"><b>'+esc(u.name)+'</b><p>'+esc(u.email)+' · '+esc(u.phone)+' · '+esc(u.university||'')+'</p><p>Arizalar soni: '+ps.filter(p=>p.email===u.email).length+'</p></div>').join(''):'<div class="note">Hozircha nomzodlar yo‘q.</div>'}
-function updateProject(id){let ps=read(P),p=ps.find(x=>x.id===id);if(!p)return;p.status=$('st-'+id).value;p.adminNote=$('note-'+id).value.trim();save(P,ps);render();renderAdmin()}
-function deleteProject(id){if(!confirm('Ushbu arizani o‘chirishni tasdiqlaysizmi?'))return;save(P,read(P).filter(p=>p.id!==id));render();renderAdmin()}
-function exportCSV(){let rows=[['Loyiha','Nomzod','Email','Telefon','Yo‘nalish','Bosqich','Holat','Sana','Admin izohi'],...read(P).map(p=>[p.title,p.owner,p.email,(read(U).find(u=>u.email===p.email)||{}).phone||'',p.category,p.stage,p.status,new Date(p.date).toLocaleString('uz-UZ'),p.adminNote||''])];let csv=rows.map(r=>r.map(v=>'"'+String(v??'').replace(/"/g,'""')+'"').join(';')).join('\r\n');let blob=new Blob(['\ufeff'+csv],{type:'text/csv;charset=utf-8;'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='anddu_startup_arizalar.csv';a.click();URL.revokeObjectURL(url)}
+/*
+  AndDU Start Up Hub — Supabase-connected version.
+  Frontend-safe values only: Project URL + Publishable key.
+  Never put a Supabase secret/service_role key in browser code.
+*/
+const SUPABASE_URL = 'https://onrdlxwfcfwkfixfuzse.supabase.co';
+const SUPABASE_PUBLISHABLE_KEY = 'sb_publishable_DX31-0PmulmkjO1EkyacOg_iXYiREGf';
+const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
 
-function openAccountWindow(){
- const u=current(); if(!u)return;
- closeAccountWindow();
- const modal=document.createElement('div');modal.id='accountModal';modal.className='account-modal';
- const ps=read(P).filter(p=>p.email===u.email).slice().reverse();
- modal.innerHTML='<div class="account-shell"><div class="account-top"><div><div class="kicker">FOYDALANUVCHI KABINETI</div><h2 class="title">Xush kelibsiz, '+esc(u.name)+'</h2><p class="sub">Shaxsiy ma’lumotlaringiz va startup loyihalaringiz shu yerda boshqariladi.</p></div><button class="account-close" onclick="closeAccountWindow()">Yopish ✕</button></div><div class="account-grid"><div class="account-tile"><h3>Shaxsiy ma’lumotlar</h3><p><b>F.I.SH:</b> '+esc(u.name)+'</p><p><b>Telefon:</b> '+esc(u.phone)+'</p><p><b>Gmail:</b> '+esc(u.email)+'</p><p><b>OTM:</b> '+esc(u.university||'Ko‘rsatilmagan')+'</p><button class="btn pale" onclick="closeAccountWindow();location.hash=\'submit\'">Startup loyihasini yuborish →</button><button class="btn danger" style="margin-left:6px" onclick="logout();closeAccountWindow()">Chiqish</button></div><div class="account-tile"><h3>Mening loyihalarim ('+ps.length+')</h3>'+(ps.length?ps.map(p=>'<div class="project"><div class="project-head"><b>'+esc(p.title)+'</b><span class="pill '+statusClass(p.status)+'">'+esc(p.status)+'</span></div><p>'+esc(p.category)+' · '+esc(p.stage)+'</p>'+(p.adminNote?'<p><b>Admin izohi:</b> '+esc(p.adminNote)+'</p>':'')+'</div>').join(''):'<p>Hozircha loyiha yuborilmagan.</p>')+'</div></div></div>';
- document.body.appendChild(modal);document.body.classList.add('account-open');
-}
-function closeAccountWindow(){const m=$('accountModal');if(m)m.remove();document.body.classList.remove('account-open')}
-function openAdminWindow(){
- closeAccountWindow();
- const modal=document.createElement('div');modal.id='accountModal';modal.className='account-modal';
- modal.innerHTML='<div class="account-shell"><div class="account-top"><div><div class="kicker">ANDDU START UP HUB · ADMIN</div><h2 class="title">Umumiy boshqaruv paneli</h2><p class="sub">Barcha nomzodlar, arizalar va loyiha holatlarini boshqaring.</p></div><button class="account-close" onclick="closeAccountWindow()">Yopish ✕</button></div><div class="account-tile"><div class="project-head"><div><h3>Barcha arizalar va nomzodlar</h3><p>Holatni yangilang, izoh qoldiring yoki arizalarni CSV formatida eksport qiling.</p></div><button class="btn pale" onclick="exportCSV()">CSV eksport</button></div><div class="toolbar"><input id="modalAdminSearch" placeholder="Loyiha yoki nomzodni qidirish..." oninput="syncAdminSearch(this.value)"><select id="modalAdminFilter" onchange="syncAdminFilter(this.value)"><option value="">Barcha holatlar</option><option>Yangi</option><option>Ko‘rib chiqilmoqda</option><option>Keyingi bosqichga o‘tdi</option><option>Qabul qilindi</option><option>Rad etildi</option></select></div><div id="modalAdminProjects"></div><h3 style="margin-top:24px">Ro‘yxatdan o‘tgan nomzodlar</h3><div id="modalAdminUsers"></div></div><div class="actions"><button class="btn danger" onclick="adminLogout();closeAccountWindow()">Admin hisobidan chiqish</button></div></div>';
- document.body.appendChild(modal);document.body.classList.add('account-open');renderModalAdmin();
-}
-function syncAdminSearch(v){$('adminSearch').value=v;renderModalAdmin()}
-function syncAdminFilter(v){$('adminFilter').value=v;renderModalAdmin()}
-function renderModalAdmin(){
- if(!$('modalAdminProjects'))return;
- _renderAdminOriginal();
- $('modalAdminProjects').innerHTML=$('adminProjects').innerHTML;
- $('modalAdminUsers').innerHTML=$('adminUsers').innerHTML;
- // Keep search and filter controls synchronized after a re-render.
- const s=$('modalAdminSearch'),f=$('modalAdminFilter');if(s)s.value=$('adminSearch').value;if(f)f.value=$('adminFilter').value;
-}
-const _renderAdminOriginal=renderAdmin;
-renderAdmin=function(){_renderAdminOriginal();renderModalAdmin()};
+const $ = id => document.getElementById(id);
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({
+  '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+}[c]));
+let currentUser = null;
+let currentProfile = null;
+let adminMode = false;
 
+function msg(id, text, error = false) {
+  const el = $(id);
+  if (el) el.innerHTML = '<div class="msg ' + (error ? 'err' : '') + '">' + esc(text) + '</div>';
+}
+function mode(m) {
+  $('register').classList.toggle('hidden', m !== 'reg');
+  $('login').classList.toggle('hidden', m !== 'login');
+  $('regTab').className = 'btn ' + (m === 'reg' ? 'blue' : 'pale');
+  $('loginTab').className = 'btn ' + (m === 'login' ? 'blue' : 'pale');
+  $('authMsg').innerHTML = '';
+}
+function statusClass(s) {
+  if (s === 'Qabul qilindi' || s === 'Keyingi bosqichga o‘tdi') return 'approved';
+  if (s === 'Rad etildi') return 'rejected';
+  if (s === 'Ko‘rib chiqilmoqda') return 'review';
+  return 'status';
+}
+function niceDate(v) {
+  try { return new Date(v).toLocaleDateString('uz-UZ'); } catch (_) { return ''; }
+}
+function showLoggedOut() {
+  $('profileTitle').textContent = 'Shaxsiy kabinet';
+  $('profileDesc').textContent = 'Ro‘yxatdan o‘ting yoki hisobingizga kiring.';
+  $('profile').textContent = 'Hozircha tizimga kirmagansiz.';
+  $('logout').classList.add('hidden');
+  $('myProjectsLink').classList.add('hidden');
+  $('projectList').innerHTML = '<div class="note">Arizalaringizni ko‘rish uchun tizimga kiring.</div>';
+}
+async function loadProfile() {
+  if (!currentUser) { currentProfile = null; showLoggedOut(); return; }
+  const meta = currentUser.user_metadata || {};
+  currentProfile = {
+    id: currentUser.id,
+    name: meta.full_name || meta.name || currentUser.email || 'Foydalanuvchi',
+    phone: meta.phone || '',
+    university: meta.university || '',
+    email: currentUser.email || ''
+  };
 
-function renderAdminRoute(){
- const isAdminRoute = location.pathname.replace(/\/+$/,'').endsWith('/admin') || location.hash==='#admin-login';
- if(!isAdminRoute)return;
- const modal=document.createElement('div');modal.id='privateAdminGate';modal.className='account-modal';
- modal.innerHTML='<div class="account-shell" style="max-width:520px"><div class="account-top"><div><div class="kicker">MAXSUS KIRISH</div><h2 class="title">Administrator</h2><p class="sub">Bu sahifa administrator uchun mo‘ljallangan.</p></div></div><form id="privateAdminForm"><div class="field"><label>Admin login (email)</label><input id="privateAdminEmail" type="email" required autocomplete="username" placeholder="Administrator email"></div><div class="field"><label>Parol</label><input id="privateAdminPassword" type="password" required autocomplete="current-password" placeholder="Parol"></div><button class="btn dark" type="submit">Boshqaruv paneliga kirish →</button><div id="privateAdminMsg"></div></form><p class="note">Eslatma: bu HTML prototipdagi demo kirish. Haqiqiy maxfiylik uchun server tomondagi autentifikatsiya talab qilinadi.</p><a class="btn pale" href="./">Bosh sahifaga qaytish</a></div>';
- document.body.appendChild(modal);document.body.classList.add('account-open');
- $('privateAdminForm').onsubmit=e=>{
-   e.preventDefault();
-   const email=$('privateAdminEmail').value.trim().toLowerCase(), password=$('privateAdminPassword').value;
-   if(email!==ADMIN_EMAIL || password!==ADMIN_PASSWORD){msg('privateAdminMsg','Login yoki parol noto‘g‘ri.',true);return}
-   sessionStorage.setItem(A,'true');
-   modal.remove();document.body.classList.remove('account-open');
-   openAdminWindow();
- };
+  // Profile row is optional; auth user metadata remains the fallback.
+  const { data, error } = await supabaseClient
+    .from('profiles')
+    .select('*')
+    .eq('id', currentUser.id)
+    .maybeSingle();
+
+  if (!error && data) {
+    currentProfile.name = data.full_name || data.name || currentProfile.name;
+    currentProfile.phone = data.phone || currentProfile.phone;
+    currentProfile.university = data.university || currentProfile.university;
+  }
+
+  $('profileTitle').textContent = 'Xush kelibsiz, ' + currentProfile.name;
+  $('profileDesc').textContent = 'Supabase orqali tizimga kirdingiz.';
+  $('profile').innerHTML = '<b>' + esc(currentProfile.name) + '</b><p>' +
+    esc(currentProfile.email) + '<br>' + esc(currentProfile.phone) + '<br>' +
+    esc(currentProfile.university) + '</p>';
+  $('logout').classList.remove('hidden');
+  $('myProjectsLink').classList.remove('hidden');
+  await loadMyProjects();
+}
+async function loadStats() {
+  const [projectsRes, usersRes, reviewRes] = await Promise.all([
+    supabaseClient.from('startup_applications').select('id', { count: 'exact', head: true }),
+    supabaseClient.from('profiles').select('id', { count: 'exact', head: true }),
+    supabaseClient.from('startup_applications').select('id', { count: 'exact', head: true })
+      .in('status', ['Yangi', 'Ko‘rib chiqilmoqda'])
+  ]);
+  $('countProjects').textContent = projectsRes.error ? '—' : (projectsRes.count ?? 0);
+  $('countUsers').textContent = usersRes.error ? '—' : (usersRes.count ?? 0);
+  $('countReview').textContent = reviewRes.error ? '—' : (reviewRes.count ?? 0);
+}
+async function loadMyProjects() {
+  if (!currentUser) return;
+  const { data, error } = await supabaseClient
+    .from('startup_applications')
+    .select('*')
+    .eq('user_id', currentUser.id)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    $('projectList').innerHTML = '<div class="note">Arizalarni yuklab bo‘lmadi. Supabase jadvali va RLS siyosatlarini tekshiring: ' + esc(error.message) + '</div>';
+    return;
+  }
+  if (!data || !data.length) {
+    $('projectList').innerHTML = '<div class="note">Siz hali loyiha yubormagansiz.</div>';
+    return;
+  }
+  $('projectList').innerHTML = data.map(p => {
+    const title = p.startup_name || p.title || 'Nomsiz loyiha';
+    const status = p.status || 'Yangi';
+    return '<div class="project"><div class="project-head"><b>' + esc(title) +
+      '</b><span class="pill ' + statusClass(status) + '">' + esc(status) +
+      '</span></div><p>' + esc(p.direction || p.category || '') + ' · ' +
+      niceDate(p.created_at) + '</p><p>' + esc(p.description || p.problem_solution || '') +
+      '</p>' + (p.admin_note ? '<p><b>Admin izohi:</b> ' + esc(p.admin_note) + '</p>' : '') +
+      (p.file_url ? '<p><a href="' + esc(p.file_url) + '" target="_blank" rel="noopener">📎 Biriktirilgan faylni ochish</a></p>' : '') +
+      '</div>';
+  }).join('');
+}
+async function render() {
+  await loadStats();
+  if (currentUser) await loadProfile();
+  else showLoggedOut();
+}
+async function logout() {
+  const { error } = await supabaseClient.auth.signOut();
+  if (error) { msg('authMsg', error.message, true); return; }
+  currentUser = null;
+  currentProfile = null;
+  closeAccountWindow();
+  await render();
+  msg('authMsg', 'Tizimdan chiqdingiz.');
+}
+$('register').onsubmit = async e => {
+  e.preventDefault();
+  const name = $('name').value.trim();
+  const phone = $('phone').value.trim();
+  const email = $('email').value.trim().toLowerCase();
+  const university = $('university').value.trim();
+  const password = $('password').value;
+  const confirmPassword = $('passwordConfirm').value;
+
+  if (!email.endsWith('@gmail.com')) { msg('authMsg', 'Iltimos, Gmail manzilidan foydalaning (@gmail.com).', true); return; }
+  if (password.length < 8) { msg('authMsg', 'Parol kamida 8 belgidan iborat bo‘lishi kerak.', true); return; }
+  if (password !== confirmPassword) { msg('authMsg', 'Parollar bir-biriga mos kelmadi.', true); return; }
+
+  const { data, error } = await supabaseClient.auth.signUp({
+    email, password,
+    options: { data: { full_name: name, phone, university } }
+  });
+  if (error) { msg('authMsg', error.message, true); return; }
+
+  if (data.user && data.session) {
+    currentUser = data.user;
+    msg('authMsg', 'Hisob yaratildi va tizimga kirdingiz.');
+    $('register').reset();
+    await render();
+    openAccountWindow();
+  } else {
+    msg('authMsg', 'Ro‘yxatdan o‘tish so‘rovi yuborildi. Emailingizga kelgan tasdiqlash havolasini bosing, so‘ng tizimga kiring.');
+    $('register').reset();
+  }
+};
+$('login').onsubmit = async e => {
+  e.preventDefault();
+  const email = $('loginEmail').value.trim().toLowerCase();
+  const password = $('loginPassword').value;
+  const { data, error } = await supabaseClient.auth.signInWithPassword({ email, password });
+  if (error) { msg('authMsg', error.message, true); return; }
+  currentUser = data.user;
+  $('login').reset();
+  msg('authMsg', 'Tizimga muvaffaqiyatli kirdingiz.');
+  await render();
+  openAccountWindow();
+};
+$('projectForm').onsubmit = async e => {
+  e.preventDefault();
+  if (!currentUser) {
+    msg('projectMsg', 'Ariza yuborish uchun avval ro‘yxatdan o‘ting yoki tizimga kiring.', true);
+    location.hash = 'account';
+    return;
+  }
+  const file = $('attachment').files[0];
+  if (file && file.size > 10 * 1024 * 1024) {
+    msg('projectMsg', 'Fayl 10 MB dan katta. Iltimos, 10 MB gacha bo‘lgan fayl yuklang.', true); return;
+  }
+  const allowed = ['pdf','doc','docx','ppt','pptx','xls','xlsx','zip'];
+  if (file && !allowed.includes(file.name.split('.').pop().toLowerCase())) {
+    msg('projectMsg', 'Ushbu fayl turi qo‘llab-quvvatlanmaydi.', true); return;
+  }
+
+  let filePath = null;
+  if (file) {
+    filePath = currentUser.id + '/' + Date.now() + '-' + file.name.replace(/[^a-zA-Z0-9._-]/g, '_');
+    const { error: uploadError } = await supabaseClient.storage.from('project-files').upload(filePath, file, {
+      cacheControl: '3600', upsert: false
+    });
+    if (uploadError) {
+      msg('projectMsg', 'Fayl yuklanmadi: ' + uploadError.message + '. project-files bucket siyosatlarini tekshiring.', true);
+      return;
+    }
+  }
+
+  const row = {
+    user_id: currentUser.id,
+    startup_name: $('pTitle').value.trim(),
+    university: $('projectUniversity').value.trim(),
+    faculty: $('faculty').value.trim(),
+    direction: $('projectDirection').value.trim(),
+    category: $('category').value,
+    stage: $('stage').value,
+    study_stage: $('studyStage').value,
+    student_direction: $('studentDirection').value.trim(),
+    phone: $('projectPhone').value.trim(),
+    team: $('team').value.trim(),
+    description: $('description').value.trim(),
+    impact: $('impact').value.trim(),
+    status: 'Yangi',
+    admin_note: '',
+    file_path: filePath
+  };
+  const { error } = await supabaseClient.from('startup_applications').insert(row);
+  if (error) {
+    msg('projectMsg', 'Ariza bazaga saqlanmadi: ' + error.message + '. Jadval ustunlari va RLS siyosatini tekshirish kerak.', true);
+    return;
+  }
+  $('projectForm').reset();
+  msg('projectMsg', 'Arizangiz Supabase bazasiga muvaffaqiyatli yuborildi.');
+  await render();
+};
+function openAccountWindow() {
+  if (!currentUser) return;
+  closeAccountWindow();
+  const modal = document.createElement('div');
+  modal.id = 'accountModal';
+  modal.className = 'account-modal';
+  const u = currentProfile || { name: currentUser.email, email: currentUser.email, phone: '', university: '' };
+  modal.innerHTML = '<div class="account-shell"><div class="account-top"><div><div class="kicker">FOYDALANUVCHI KABINETI</div><h2 class="title">Xush kelibsiz, ' +
+    esc(u.name) + '</h2><p class="sub">Shaxsiy ma’lumotlaringiz va startup loyihalaringiz.</p></div><button class="account-close" onclick="closeAccountWindow()">Yopish ✕</button></div>' +
+    '<div class="account-grid"><div class="account-tile"><h3>Shaxsiy ma’lumotlar</h3><p><b>F.I.SH:</b> ' + esc(u.name) +
+    '</p><p><b>Telefon:</b> ' + esc(u.phone) + '</p><p><b>Gmail:</b> ' + esc(u.email) +
+    '</p><p><b>OTM:</b> ' + esc(u.university || 'Ko‘rsatilmagan') +
+    '</p><button class="btn pale" onclick="closeAccountWindow();location.hash=\'submit\'">Startup loyihasini yuborish →</button></div>' +
+    '<div class="account-tile"><h3>Mening loyihalarim</h3><div id="modalMyProjects">Yuklanmoqda...</div></div></div></div>';
+  document.body.appendChild(modal);
+  document.body.classList.add('account-open');
+  loadModalProjects();
+}
+async function loadModalProjects() {
+  const target = $('modalMyProjects');
+  if (!target || !currentUser) return;
+  const { data, error } = await supabaseClient.from('startup_applications').select('*')
+    .eq('user_id', currentUser.id).order('created_at', { ascending: false });
+  if (error) { target.textContent = 'Loyihalarni yuklashda xatolik: ' + error.message; return; }
+  target.innerHTML = data && data.length ? data.map(p =>
+    '<div class="project"><div class="project-head"><b>' + esc(p.startup_name || 'Nomsiz loyiha') +
+    '</b><span class="pill ' + statusClass(p.status || 'Yangi') + '">' + esc(p.status || 'Yangi') +
+    '</span></div><p>' + esc(p.direction || '') + '</p>' +
+    (p.admin_note ? '<p><b>Admin izohi:</b> ' + esc(p.admin_note) + '</p>' : '') + '</div>'
+  ).join('') : '<p>Hozircha loyiha yuborilmagan.</p>';
+}
+function closeAccountWindow() {
+  const m = $('accountModal');
+  if (m) m.remove();
+  document.body.classList.remove('account-open');
 }
 
-render();renderAdmin();renderAdminRoute();
+/* Admin route is deliberately not given a hard-coded password.
+   Production admin management must be protected with Supabase Auth + server-side role/RLS. */
+function renderAdminRoute() {
+  const isAdminRoute = location.pathname.replace(/\/+$/, '').endsWith('/admin') || location.hash === '#admin-login';
+  if (!isAdminRoute) return;
+  const modal = document.createElement('div');
+  modal.id = 'privateAdminGate';
+  modal.className = 'account-modal';
+  modal.innerHTML = '<div class="account-shell" style="max-width:520px"><div class="account-top"><div><div class="kicker">MAXSUS KIRISH</div><h2 class="title">Administrator</h2><p class="sub">Supabase administrator hisobi orqali kiring.</p></div><button class="account-close" onclick="closeAdminGate()">Yopish ✕</button></div><form id="privateAdminForm"><div class="field"><label>Admin email</label><input id="privateAdminEmail" type="email" required autocomplete="username"></div><div class="field"><label>Parol</label><input id="privateAdminPassword" type="password" required autocomplete="current-password"></div><button class="btn dark" type="submit">Kirish →</button><div id="privateAdminMsg"></div></form><p class="note">Admin ma’lumotlari kod ichida saqlanmaydi. Admin huquqlarini Supabase RLS orqali alohida sozlash zarur.</p><a class="btn pale" href="./">Bosh sahifaga qaytish</a></div>';
+  document.body.appendChild(modal);
+  document.body.classList.add('account-open');
+  $('privateAdminForm').onsubmit = async e => {
+    e.preventDefault();
+    const { data, error } = await supabaseClient.auth.signInWithPassword({
+      email: $('privateAdminEmail').value.trim().toLowerCase(),
+      password: $('privateAdminPassword').value
+    });
+    if (error) { msg('privateAdminMsg', error.message, true); return; }
+    currentUser = data.user;
+    closeAdminGate();
+    msg('authMsg', 'Hisobga kirildi. Admin ma’lumotlarini ko‘rsatish uchun serverda admin roli va RLS sozlanishi kerak.');
+    await render();
+  };
+}
+function closeAdminGate() {
+  const el = $('privateAdminGate');
+  if (el) el.remove();
+  document.body.classList.remove('account-open');
+}
+
+$('adminSearch').addEventListener('input', () => {});
+$('adminFilter').addEventListener('change', () => {});
+supabaseClient.auth.onAuthStateChange((_event, session) => {
+  currentUser = session?.user || null;
+  setTimeout(() => render(), 0);
+});
+(async function init() {
+  const { data } = await supabaseClient.auth.getSession();
+  currentUser = data.session?.user || null;
+  await render();
+  renderAdminRoute();
+})();
 </script></body></html>
