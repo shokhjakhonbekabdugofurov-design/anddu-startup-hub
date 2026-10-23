@@ -150,6 +150,33 @@ async function loadStats() {
   $('countUsers').textContent = usersRes.error ? '—' : (usersRes.count ?? 0);
   $('countReview').textContent = reviewRes.error ? '—' : (reviewRes.count ?? 0);
 }
+
+// Fayl havolasi: eski public URL yoki yangi storage path uchun vaqtinchalik signed URL yaratadi.
+function getProjectFilePath(fileValue) {
+  if (!fileValue) return null;
+  const value = String(fileValue).trim();
+  const marker = '/storage/v1/object/public/project-files/';
+  const signedMarker = '/storage/v1/object/sign/project-files/';
+  try {
+    const parsed = new URL(value, window.location.origin);
+    const publicAt = parsed.pathname.indexOf(marker);
+    if (publicAt >= 0) return decodeURIComponent(parsed.pathname.slice(publicAt + marker.length));
+    const signedAt = parsed.pathname.indexOf(signedMarker);
+    if (signedAt >= 0) return decodeURIComponent(parsed.pathname.slice(signedAt + signedMarker.length)).split('?')[0];
+  } catch (_) {}
+  if (!/^https?:\/\//i.test(value)) return value.replace(/^\/+/, '');
+  return null;
+}
+async function getProjectFileLink(fileValue) {
+  if (!fileValue) return null;
+  const path = getProjectFilePath(fileValue);
+  if (!path) return fileValue;
+  const { data, error } = await supabaseClient.storage.from('project-files').createSignedUrl(path, 60 * 60 * 24 * 7);
+  if (!error && data?.signedUrl) return data.signedUrl;
+  console.error('Fayl uchun signed URL yaratilmadi:', error?.message || error);
+  return fileValue;
+}
+
 async function loadMyProjects() {
   if (!currentUser) return;
   const { data, error } = await supabaseClient
@@ -166,17 +193,19 @@ async function loadMyProjects() {
     $('projectList').innerHTML = '<div class="note">Siz hali loyiha yubormagansiz.</div>';
     return;
   }
-  $('projectList').innerHTML = data.map(p => {
+  const projectCards = await Promise.all(data.map(async p => {
     const title = p.startup_name || p.title || 'Nomsiz loyiha';
     const status = p.status || 'Yangi';
+    const fileLink = p.file_url ? await getProjectFileLink(p.file_url) : null;
     return '<div class="project"><div class="project-head"><b>' + esc(title) +
       '</b><span class="pill ' + statusClass(status) + '">' + esc(status) +
       '</span></div><p>' + esc(p.direction || p.category || '') + (p.project_stage ? ' · ' + esc(p.project_stage) : '') + ' · ' +
       niceDate(p.created_at) + '</p><p>' + esc(p.project_description || p.description || p.problem_solution || '') +
       '</p>' + (p.admin_note ? '<p><b>Admin izohi:</b> ' + esc(p.admin_note) + '</p>' : '') +
-      (p.file_url ? '<p><a href="' + esc(p.file_url) + '" target="_blank" rel="noopener">📎 Biriktirilgan faylni ochish</a></p>' : '') +
+      (fileLink ? '<p><a href="' + esc(fileLink) + '" target="_blank" rel="noopener">📎 Biriktirilgan faylni ochish</a></p>' : '') +
       '</div>';
-  }).join('');
+  }));
+  $('projectList').innerHTML = projectCards.join('');
 }
 async function render() {
   await loadStats();
@@ -278,13 +307,7 @@ $('projectForm').onsubmit = async e => {
   const fullDescription = impactText
     ? projectDescription + '\n\nKutilayotgan natija va rivojlanish rejasi: ' + impactText
     : projectDescription;
-  let publicFileUrl = null;
-  if (filePath) {
-    const { data: urlData } = supabaseClient.storage.from('project-files').getPublicUrl(filePath);
-    publicFileUrl = urlData?.publicUrl || null;
-  }
-
-  const studentDirection = $('studentDirection').value.trim();
+const studentDirection = $('studentDirection').value.trim();
   const projectDirection = $('projectDirection').value.trim();
   const row = {
     user_id: currentUser.id,
@@ -300,7 +323,7 @@ $('projectForm').onsubmit = async e => {
     project_description: fullDescription,
     status: 'Yangi',
     admin_note: '',
-    file_url: publicFileUrl
+    file_url: filePath
   };
   const { error } = await supabaseClient.from('startup_applications').insert(row);
   if (error) {
@@ -335,14 +358,20 @@ async function loadModalProjects() {
   const { data, error } = await supabaseClient.from('startup_applications').select('*')
     .eq('user_id', currentUser.id).order('created_at', { ascending: false });
   if (error) { target.textContent = 'Loyihalarni yuklashda xatolik: ' + error.message; return; }
-  target.innerHTML = data && data.length ? data.map(p =>
-    '<div class="project"><div class="project-head"><b>' + esc(p.startup_name || 'Nomsiz loyiha') +
-    '</b><span class="pill ' + statusClass(p.status || 'Yangi') + '">' + esc(p.status || 'Yangi') +
-    '</span></div><p>' + esc(p.direction || '') + (p.project_stage ? ' · ' + esc(p.project_stage) : '') + '</p>' +
-    (p.project_description ? '<p>' + esc(p.project_description) + '</p>' : '') +
-    (p.file_url ? '<p><a href="' + esc(p.file_url) + '" target="_blank" rel="noopener">📎 Biriktirilgan faylni ochish</a></p>' : '') +
-    (p.admin_note ? '<p><b>Admin izohi:</b> ' + esc(p.admin_note) + '</p>' : '') + '</div>'
-  ).join('') : '<p>Hozircha loyiha yuborilmagan.</p>';
+  if (!data || !data.length) {
+    target.innerHTML = '<p>Hozircha loyiha yuborilmagan.</p>';
+    return;
+  }
+  const cards = await Promise.all(data.map(async p => {
+    const fileLink = p.file_url ? await getProjectFileLink(p.file_url) : null;
+    return '<div class="project"><div class="project-head"><b>' + esc(p.startup_name || 'Nomsiz loyiha') +
+      '</b><span class="pill ' + statusClass(p.status || 'Yangi') + '">' + esc(p.status || 'Yangi') +
+      '</span></div><p>' + esc(p.direction || '') + (p.project_stage ? ' · ' + esc(p.project_stage) : '') + '</p>' +
+      (p.project_description ? '<p>' + esc(p.project_description) + '</p>' : '') +
+      (fileLink ? '<p><a href="' + esc(fileLink) + '" target="_blank" rel="noopener">📎 Biriktirilgan faylni ochish</a></p>' : '') +
+      (p.admin_note ? '<p><b>Admin izohi:</b> ' + esc(p.admin_note) + '</p>' : '') + '</div>';
+  }));
+  target.innerHTML = cards.join('');
 }
 function closeAccountWindow() {
   const m = $('accountModal');
@@ -406,8 +435,9 @@ async function loadAdminApplications() {
     target.innerHTML = '<div class="note">' + (all.length ? 'Tanlangan qidiruv yoki holat bo‘yicha ariza topilmadi.' : 'Hozircha ariza mavjud emas.') + '</div>';
     return;
   }
-  target.innerHTML = rows.map(p => {
+  const adminCards = await Promise.all(rows.map(async p => {
     const status = p.status || 'Yangi';
+    const fileLink = p.file_url ? await getProjectFileLink(p.file_url) : null;
     return '<article class="admin-project" data-id="' + esc(p.id) + '">' +
       '<div class="project-head"><div><h3 style="margin:0 0 5px">' + esc(p.startup_name || 'Nomsiz loyiha') + '</h3>' +
       '<span class="pill ' + statusClass(status) + '">' + esc(status) + '</span> <span class="pill">' + esc(p.category || p.direction || 'Yo‘nalish ko‘rsatilmagan') + '</span></div>' +
@@ -416,12 +446,13 @@ async function loadAdminApplications() {
       '<p><b>OTM:</b> ' + esc(p.university || '—') + ' · <b>Fakultet:</b> ' + esc(p.faculty || '—') + '</p>' +
       '<p><b>Telefon:</b> ' + esc(p.phone || '—') + ' · <b>Jamoa:</b> ' + esc(p.team_members || '—') + '</p>' +
       '<p><b>Loyiha tavsifi:</b><br>' + esc(p.project_description || '—').replace(/\n/g,'<br>') + '</p>' +
-      (p.file_url ? '<p><a href="' + esc(p.file_url) + '" target="_blank" rel="noopener">📎 Biriktirilgan faylni ochish</a></p>' : '<p><small>Fayl biriktirilmagan.</small></p>') +
+      (fileLink ? '<p><a href="' + esc(fileLink) + '" target="_blank" rel="noopener">📎 Biriktirilgan faylni ochish</a></p>' : '<p><small>Fayl biriktirilmagan.</small></p>') +
       '<div class="admin-project-grid"><div><label><b>Ariza holati</b></label><select class="admin-status">' +
       ADMIN_STATUSES.map(s => '<option value="' + esc(s) + '"' + (s === status ? ' selected' : '') + '>' + esc(s) + '</option>').join('') +
       '</select></div><div><label><b>Talabaga izoh</b></label><textarea class="admin-note" rows="2" maxlength="1500" placeholder="Izoh yoki keyingi qadamlar">' + esc(p.admin_note || '') + '</textarea></div></div>' +
       '<div class="project-actions"><button type="button" class="btn blue admin-save">Saqlash</button></div><div class="admin-row-msg"></div></article>';
-  }).join('');
+  }));
+  target.innerHTML = adminCards.join('');
 
   target.querySelectorAll('.admin-save').forEach(button => {
     button.addEventListener('click', async () => {
